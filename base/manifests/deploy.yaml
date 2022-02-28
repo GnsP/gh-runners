@@ -50,5 +50,5 @@ spec:
               memory: "6Gi"
               cpu: "2"
             limits:
-              memory: "12Gi"
+              memory: "16Gi"
               cpu: "6"
