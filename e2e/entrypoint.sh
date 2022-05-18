@@ -28,7 +28,7 @@ gpg --batch --import-ownertrust /etc/gnupg/ownertrust.txt
 # configure runner
 export RUNNER_ALLOW_RUNASROOT=1
 export LANG=C.UTF-8
-/runner/config.sh --unattended --replace --work "/tmp" --url "https://github.com/${ORG_NAME}" --token "$ACTIONS_RUNNER_INPUT_TOKEN" --labels "$RUNNER_LABEL"
+/runner/config.sh --ephemeral --unattended --replace --work "/tmp" --url "https://github.com/${ORG_NAME}" --token "$ACTIONS_RUNNER_INPUT_TOKEN" --labels "$RUNNER_LABEL"
 # start runner
 # https://github.com/actions/runner/issues/246#issuecomment-615293718
 /runner/bin/runsvc.sh
