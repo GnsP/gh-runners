@@ -31,4 +31,4 @@ export LANG=C.UTF-8
 /runner/config.sh --unattended --replace --work "/tmp" --url "https://github.com/${ORG_NAME}" --token "$ACTIONS_RUNNER_INPUT_TOKEN" --labels "$RUNNER_LABEL"
 # start runner
 # https://github.com/actions/runner/issues/246#issuecomment-615293718
-/runner/bin/runsvc.sh
+/runner/bin/runsvc.sh --once
