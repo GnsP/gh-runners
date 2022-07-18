@@ -1,5 +1,7 @@
 # Self Hosted Runners on GKE with ADC using Workload Identity
 
+![Header Logo](https://services.google.com/fh/files/misc/github_gke.png)
+
 ## Overview
 
 This example showcases how to deploy GitHub Actions Self Hosted Runners on GKE with Application Default Credentials using Workload Identity.
@@ -9,9 +11,9 @@ This example showcases how to deploy GitHub Actions Self Hosted Runners on GKE w
 - Step 1: Set the required environment variables.
 
 ```sh
-$ export PROJECT_ID=foo
+$ export PROJECT_ID=<GCP_PROJECT_ID>
 $ export CLUSTER_NAME=runner-cluster
-$ export GITHUB_TOKEN=foo
+$ export GITHUB_TOKEN=<GITHUB_PAT_TOKEN_OF_ORGANIZATION>
 ```
 
 - Step 2: Enable the required GCP APIs.
@@ -28,13 +30,15 @@ $ gcloud services enable container.googleapis.com \
 ```sh
 $ gcloud builds submit --tag gcr.io/${PROJECT_ID}/runner:latest .
 $ gcloud builds submit --tag gcr.io/${PROJECT_ID}/runner-e2e:latest e2e
+$ gcloud builds submit --tag gcr.io/${PROJECT_ID}/runner-hub:latest hub-cdapio
 ```
 
 - Step 4: Create a GKE Cluster and generate kubeconfig.
 
 ```sh
-$ gcloud beta container clusters create ${CLUSTER_NAME} \
-    --release-channel regular \
+$ gcloud container clusters create ${CLUSTER_NAME} \
+    --num-nodes=3 --machine-type=c2-standard-8 --enable-autoscaling --min-nodes=0 --max-nodes=15 \
+    --enable-autorepair --enable-autoupgrade \
     --workload-pool=${PROJECT_ID}.svc.id.goog
 $ gcloud container clusters get-credentials ${CLUSTER_NAME}
 ```
@@ -72,6 +76,7 @@ $ kubectl annotate serviceaccount \
 ```sh
 $ kubectl create secret generic runner-k8s-secret --from-literal=GITHUB_TOKEN=$GITHUB_TOKEN
 $ kustomize edit set image gcr.io/PROJECT_ID/runner:latest=gcr.io/$PROJECT_ID/runner:latest
+$ kustomize edit set image gcr.io/PROJECT_ID/runner:latest=gcr.io/$PROJECT_ID/runner-hub:latest
 ```
 
 - Step 8: Deploy the Self Hosted Runner deployment using Kustomize.
@@ -81,4 +86,5 @@ $ kustomize build build-cdapio | kubectl apply -f -
 $ kustomize build build-data-integrations | kubectl apply -f -
 $ kustomize build e2e-cdapio | kubectl apply -f -
 $ kustomize build e2e-data-integrations | kubectl apply -f -
+$ kustomize build hub-cdapio | kubectl apply -f -
 ```

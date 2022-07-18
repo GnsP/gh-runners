@@ -1,0 +1,50 @@
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+nameSuffix: -hub-cdapio
+commonLabels:
+  type: hub
+  org: cdapio
+bases:
+  - ../build
+images:
+  - name: gcr.io/cdapio-github-builds/runner:latest
+    newName: gcr.io/cdapio-github-builds/runner-hub
+patches:
+  - patch: |-
+      - op: add
+        path: "/spec/template/spec/serviceAccountName"
+        value: gke-github-runner-hub-sa
+      - op: add
+        path: "/spec/template/spec/imagePullPolicy"
+        value: true
+    target:
+      kind: Deployment
+  - patch: |-
+      - op: replace
+        path: "/spec/maxReplicas"
+        value: 5
+      - op: replace
+        path: "/spec/minReplicas"
+        value: 5
+    target:
+      kind: HorizontalPodAutoscaler
+configMapGenerator:
+  - literals:
+    - ORG_NAME=cdapio
+    - RUNNER_LABEL=cdapio-hub-k8-runner
+    name: runner-k8s-config
+    behavior: merge
