@@ -26,6 +26,9 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     python \
     python3 \
     python3-pip \
+    gcc \
+    python3-dev \
+    python3-setuptools \
     openjdk-8-jdk-headless \
     gnupg \
     git \
@@ -62,6 +65,8 @@ ENV PATH $PATH:/home/runner/google-cloud-sdk/bin
 RUN pip3 install yaml-query
 RUN pip3 install pyyaml
 RUN pip3 install google-cloud-storage
+RUN pip3 uninstall crcmod
+RUN pip3 install --no-cache-dir -U crcmod
 
 # Initiating entrypoint with script for authorising registration of GitHub Runner
 ENTRYPOINT ["/runner/entrypoint.sh"]
