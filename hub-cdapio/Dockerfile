@@ -37,7 +37,10 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     maven && \
     update-java-alternatives -s java-1.8.0-openjdk-amd64 && \
     wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && \
-    chmod a+x /usr/local/bin/yq
+    chmod a+x /usr/local/bin/yq && \
+    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && \
+    apt-get update && apt-get install google-cloud-cli
 
 
 # Specifying GitHub Runner Version
@@ -59,12 +62,9 @@ RUN chmod +x entrypoint.sh && \
     chown -R runner:runner /home/runner
 USER runner
 
-# Installing Google Cloud SDK and YAML querying tools under 'runner' user
-RUN curl -sSL https://sdk.cloud.google.com | bash
-ENV PATH $PATH:/home/runner/google-cloud-sdk/bin
+# Installing checksum and YAML querying tools under 'runner' user
 RUN pip3 install yaml-query
 RUN pip3 install pyyaml
-RUN pip3 install google-cloud-storage
 RUN pip3 uninstall crcmod
 RUN pip3 install --no-cache-dir -U crcmod
 
