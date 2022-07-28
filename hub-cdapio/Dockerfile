@@ -34,7 +34,10 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     git \
     wget \
     nodejs \
+    ruby-dev build-essential \
+    rpm \
     maven && \
+    gem i fpm -f && \
     update-java-alternatives -s java-1.8.0-openjdk-amd64 && \
     wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && \
     chmod a+x /usr/local/bin/yq && \

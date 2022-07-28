@@ -26,8 +26,14 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     openjdk-8-jdk-headless \
     gnupg \
     git \
+    ruby-dev build-essential \
+    rpm \
     maven && \
-    update-java-alternatives -s java-1.8.0-openjdk-amd64
+    gem i fpm -f && \
+    update-java-alternatives -s java-1.8.0-openjdk-amd64 && \
+    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && \
+    apt-get update && apt-get install google-cloud-cli
     
 ARG GH_RUNNER_VERSION="2.277.1"
 WORKDIR /runner
