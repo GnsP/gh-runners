@@ -21,6 +21,14 @@ echo "Requesting registration URL at '${registration_url}'"
 payload=$(curl -sX POST -H "Authorization: token ${GITHUB_TOKEN}" ${registration_url})
 export RUNNER_TOKEN=$(echo $payload | jq .token --raw-output)
 
+mkdir -p ~/.m2
+ln -s /etc/maven-settings/settings.xml ~/.m2/settings.xml
+# Initialize gnupg
+gpg --batch --allow-secret-key-import --import /etc/gnupg/private.key
+gpg --batch --import-ownertrust /etc/gnupg/ownertrust.txt
+# configure runner
+export RUNNER_ALLOW_RUNASROOT=1
+export LANG=C.UTF-8
 # Creating an configuring self hosted runner
 /runner/config.sh --name $(hostname) --token ${RUNNER_TOKEN} --url https://github.com/${ORG_NAME} --work ${RUNNER_WORKDIR} --unattended --replace --ephemeral --labels ${RUNNER_LABEL}
 
