@@ -30,7 +30,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     nodejs \
     maven && \
     update-java-alternatives -s java-1.8.0-openjdk-amd64 && \
-    pip3 install requests && \
+    pip3 install requests yaml-query pyyaml && \
     curl https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
     -o google-chrome-stable_current_amd64.deb && \
     apt -y install ./google-chrome-stable_current_amd64.deb

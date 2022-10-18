@@ -37,10 +37,10 @@ patches:
 - patch: |-
     - op: replace
       path: "/spec/maxReplicas"
-      value: 2
+      value: 10
     - op: replace
       path: "/spec/minReplicas"
-      value: 2
+      value: 10
   target:
     kind: HorizontalPodAutoscaler
 

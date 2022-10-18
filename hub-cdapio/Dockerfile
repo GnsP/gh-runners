@@ -23,6 +23,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     iputils-ping \
     tar \
     jq \
+    software-properties-common \
     python \
     python3 \
     python3-pip \
@@ -43,8 +44,8 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     chmod a+x /usr/local/bin/yq && \
     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && \
-    apt-get update && apt-get install google-cloud-cli
-
+    apt-get update && apt-get install google-cloud-cli && \
+    pip3 install requests yaml-query pyyaml --no-cache-dir -U crcmod
 
 # Specifying GitHub Runner Version
 ARG GH_RUNNER_VERSION="2.292.0"
@@ -64,12 +65,6 @@ RUN chmod +x entrypoint.sh && \
     chown -R runner:runner /runner && \
     chown -R runner:runner /home/runner
 USER runner
-
-# Installing checksum and YAML querying tools under 'runner' user
-RUN pip3 install yaml-query
-RUN pip3 install pyyaml
-RUN pip3 uninstall crcmod
-RUN pip3 install --no-cache-dir -U crcmod
 
 # Initiating entrypoint with script for authorising registration of GitHub Runner
 ENTRYPOINT ["/runner/entrypoint.sh"]
