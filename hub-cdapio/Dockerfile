@@ -48,7 +48,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     pip3 install requests yaml-query pyyaml --no-cache-dir -U crcmod
 
 # Specifying GitHub Runner Version
-ARG GH_RUNNER_VERSION="2.292.0"
+ARG GH_RUNNER_VERSION="2.304.0"
 WORKDIR /runner
 
 
