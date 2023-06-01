@@ -27,9 +27,11 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     openjdk-8-jdk-headless \
     gnupg \
     git \
-    nodejs \
+    npm \
     maven && \
-    update-java-alternatives -s java-1.8.0-openjdk-amd64 && \
+    npm i -g n && \
+    n 16.20.0 && \
+    update-java-alternatives --jre-headless -s java-1.8.0-openjdk-amd64 && \
     pip3 install requests yaml-query pyyaml && \
     curl https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
     -o google-chrome-stable_current_amd64.deb && \
